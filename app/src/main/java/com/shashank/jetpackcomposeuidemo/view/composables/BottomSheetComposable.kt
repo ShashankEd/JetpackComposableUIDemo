@@ -1,4 +1,4 @@
-package com.shashank.jetpackcomposeuidemo
+package com.shashank.jetpackcomposeuidemo.view.composables
 
 import android.content.Context
 import android.util.Log
@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Button
@@ -18,7 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -38,6 +35,8 @@ import org.json.JSONObject
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetComposable(context: Context, onFormSubmit: (JSONObject) -> Unit) {
+
+    //define state
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember {
@@ -49,10 +48,18 @@ fun BottomSheetComposable(context: Context, onFormSubmit: (JSONObject) -> Unit) 
     var confirmAddress by remember {
         mutableStateOf("")
     }
+    var confirmTechStack by remember {
+        mutableStateOf("")
+    }
+
+
     //the below launch effect will be triggered whenever  showBottomSheet value is changed
     LaunchedEffect(showBottomSheet) {
         Log.d("BottomSheet", "LaunchedEffect called for updated $showBottomSheet ")
     }
+
+    //define UI widgets
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -87,8 +94,10 @@ fun BottomSheetComposable(context: Context, onFormSubmit: (JSONObject) -> Unit) 
                         showBottomSheet = true
                         confirmAddress = it.get("address").toString()
                         confirmName = it.get("name").toString()
+                        confirmTechStack = it.get("techStack").toString()
                         Log.d("Confirm Name from post form", confirmName)
                         Log.d("Confirm address from post form", confirmAddress)
+                        Log.d("Confirm tech-stack from post form", confirmTechStack)
                     }
                 )
 
@@ -125,6 +134,10 @@ fun BottomSheetComposable(context: Context, onFormSubmit: (JSONObject) -> Unit) 
                                 modifier = Modifier.fillMaxWidth().padding(10.dp),
                                 text = "Address: $confirmAddress",
                             )
+                            Text(
+                                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                                text = "Tech Stack: $confirmTechStack",
+                            )
                             Button(
                                 modifier = Modifier.wrapContentWidth().padding(10.dp),
                                 onClick = {
@@ -134,6 +147,7 @@ fun BottomSheetComposable(context: Context, onFormSubmit: (JSONObject) -> Unit) 
                                     val successForm = JSONObject()
                                     successForm.put("name", confirmName)
                                     successForm.put("address", confirmAddress)
+                                    successForm.put("techStack", confirmTechStack)
                                     onFormSubmit(successForm)
                                 },
                                 content = {

@@ -1,4 +1,4 @@
-package com.shashank.jetpackcomposeuidemo.ui.theme
+package com.shashank.jetpackcomposeuidemo.view.ui.theme
 
 import android.app.Activity
 import android.os.Build

@@ -1,4 +1,4 @@
-package com.shashank.jetpackcomposeuidemo.ui.theme
+package com.shashank.jetpackcomposeuidemo.view.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
