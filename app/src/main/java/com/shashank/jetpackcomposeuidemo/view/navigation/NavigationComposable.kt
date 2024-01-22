@@ -14,9 +14,10 @@ import com.shashank.jetpackcomposeuidemo.core.utils.Screen
 import com.shashank.jetpackcomposeuidemo.view.composables.DashboardComposable
 import com.shashank.jetpackcomposeuidemo.view.composables.LoginComposable
 import com.shashank.jetpackcomposeuidemo.view.composables.ProfileComposable
+import org.json.JSONObject
 
 @Composable
-fun NavigationComposable(context: Context, navController: NavHostController) {
+fun NavigationComposable(context: Context, navController: NavHostController, onDrawerItemSelected: () -> Unit) {
     NavHost(navController =navController , startDestination = Screen.Login.route ) {
 
         composable(route = Screen.Login.route) {
@@ -27,6 +28,7 @@ fun NavigationComposable(context: Context, navController: NavHostController) {
                 },
                 navController = navController
             )
+            onDrawerItemSelected()
         }
 
         composable(route = Screen.Dashboard.route) {
@@ -37,6 +39,7 @@ fun NavigationComposable(context: Context, navController: NavHostController) {
                 },
                 navController = navController
             )
+            onDrawerItemSelected()
         }
         composable(route = Screen.Profile.route) {
             ProfileComposable(
@@ -46,6 +49,7 @@ fun NavigationComposable(context: Context, navController: NavHostController) {
                 },
                 navController = navController
             )
+            onDrawerItemSelected()
         }
     }
 }
