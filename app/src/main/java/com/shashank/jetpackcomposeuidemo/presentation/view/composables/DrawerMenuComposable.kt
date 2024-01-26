@@ -1,4 +1,4 @@
-package com.shashank.jetpackcomposeuidemo.view.composables
+package com.shashank.jetpackcomposeuidemo.presentation.view.composables
 
 import android.content.Context
 import android.util.Log
@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.shashank.jetpackcomposeuidemo.R
 import com.shashank.jetpackcomposeuidemo.core.utils.Screen
-import com.shashank.jetpackcomposeuidemo.view.navigation.NavigationComposable
+import com.shashank.jetpackcomposeuidemo.presentation.view.navigation.NavigationComposable
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

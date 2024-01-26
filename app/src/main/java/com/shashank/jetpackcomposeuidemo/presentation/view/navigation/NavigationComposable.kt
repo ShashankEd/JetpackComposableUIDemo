@@ -1,4 +1,4 @@
-package com.shashank.jetpackcomposeuidemo.view.navigation
+package com.shashank.jetpackcomposeuidemo.presentation.view.navigation
 
 import android.content.Context
 import android.util.Log
@@ -11,9 +11,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shashank.jetpackcomposeuidemo.core.utils.Screen
-import com.shashank.jetpackcomposeuidemo.view.composables.DashboardComposable
-import com.shashank.jetpackcomposeuidemo.view.composables.LoginComposable
-import com.shashank.jetpackcomposeuidemo.view.composables.ProfileComposable
+import com.shashank.jetpackcomposeuidemo.presentation.view.composables.DashboardComposable
+import com.shashank.jetpackcomposeuidemo.presentation.view.composables.LoginComposable
+import com.shashank.jetpackcomposeuidemo.presentation.view.composables.ProfileComposable
 import org.json.JSONObject
 
 @Composable
