@@ -18,6 +18,7 @@ import com.shashank.jetpackcomposeuidemo.core.Boat
 import com.shashank.jetpackcomposeuidemo.core.Engine
 import com.shashank.jetpackcomposeuidemo.di.AppModule
 import com.shashank.jetpackcomposeuidemo.presentation.view.composables.DrawerMenuComposable
+import com.shashank.jetpackcomposeuidemo.presentation.view.composables.OtpLoginComposable
 import com.shashank.jetpackcomposeuidemo.presentation.view.ui.theme.JetpackComposeUIDemoTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -58,6 +59,7 @@ class MainActivity : ComponentActivity(){
                     Column(modifier = Modifier.fillMaxSize()) {
                         DrawerMenuComposable(context = this@MainActivity, navController)
                     }
+//                    OtpLoginComposable(context = this)
                 }
             }
         }

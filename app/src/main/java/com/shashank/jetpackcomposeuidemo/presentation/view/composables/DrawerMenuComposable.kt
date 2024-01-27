@@ -51,7 +51,7 @@ fun DrawerMenuComposable(context: Context, navHostController: NavHostController)
             ) {
                 NavigationDrawerItem(
                     label = {Text("Login")},
-                    selected = if(selectedDrawerItem == 1) true else false,
+                    selected = selectedDrawerItem == 1,
                     onClick = {
                         selectedDrawerItem = 1
                         Toast.makeText(context, "Login clicked", Toast.LENGTH_LONG).show()
@@ -69,7 +69,7 @@ fun DrawerMenuComposable(context: Context, navHostController: NavHostController)
                 Divider()
                 NavigationDrawerItem(
                     label = {Text("Dashboard")},
-                    selected = if(selectedDrawerItem == 2) true else false,
+                    selected = selectedDrawerItem == 2,
                     onClick = {
                         selectedDrawerItem = 2
                         Toast.makeText(context, "Dashboard clicked", Toast.LENGTH_LONG).show()
@@ -87,7 +87,7 @@ fun DrawerMenuComposable(context: Context, navHostController: NavHostController)
                 Divider()
                 NavigationDrawerItem(
                     label = {Text("Profile")},
-                    selected = if(selectedDrawerItem == 3) true else false,
+                    selected = selectedDrawerItem == 3,
                     onClick = {
                         selectedDrawerItem = 3
                         Toast.makeText(context, "Profile clicked", Toast.LENGTH_LONG).show()
