@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -63,46 +64,37 @@ fun OtpLoginComposable(context: Context, navHostController: NavHostController) {
         mutableStateOf(false)
     }
 
-//    var showOTP by remember {
-//        mutableStateOf(false)
-//    }
-
     LaunchedEffect(sendClicked) {
-        mobileNumber.let {
-            if(sendClicked && mobileNumber.length == 10) {
-                // call the API here which will send the OTP
-                otp =""
-                CoroutineScope(Dispatchers.IO).launch {
-                    delay(2000)
-                    withContext(Dispatchers.Main) {
-                        repeat(4) {
-                            otp += (1..9).random().toString()
-                        }
-                        sendClicked = false
-                        Log.d("Jetpack", "Otp genrated = $otp")
-                    }
+        if(sendClicked) {
+            sendClicked = false
+            mobileNumber.let {
+                if(mobileNumber.length == 10) {
+                    //take the user to otp consume screen
+                    navHostController.navigate(Screen.Setup.OtpSubmit.route)
+                } else {
+                    Toast.makeText(context, "Enter correct number", Toast.LENGTH_LONG).show()
                 }
-            } else {
-                Toast.makeText(context, "Enter correct number", Toast.LENGTH_LONG).show()
             }
-        }
-    }
-
-    LaunchedEffect(otp) {
-        if(otp.length == 4) {
-//            showOTP = true
         }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp),
+            . padding(vertical = 40.dp, horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+
+        Image(
+            modifier = Modifier
+                .size(200.dp),
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "Logo"
+        )
+        Spacer(modifier = Modifier.padding(vertical = 20.dp))
         Row (
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ){
@@ -122,84 +114,12 @@ fun OtpLoginComposable(context: Context, navHostController: NavHostController) {
                     .size(40.dp)
                     .clickable {
 //                        sendClicked = true
-                         //Take user to otp submit
-                          navHostController.navigate(Screen.Setup.OtpSubmit.route)
+                        //Take user to otp submit
+                               sendClicked = true
                     },
                 painter = painterResource(id = R.drawable.send_otp),
                 contentDescription = "send otp"
             )
-        }
-//        Row (
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(vertical = 20.dp),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.Center
-//        ){
-//            OtpComposable(context, otp) {
-//                //Otp filled, now take the user to the other screen
-//            }
-//        }
-    }
-}
-
-@Composable
-fun OtpComposable(context: Context, otp:String, onOtpSubmit: (String) -> Unit) {
-    var typeOTP by remember {
-        mutableStateOf(otp)
-    }
-
-    LaunchedEffect(typeOTP) {
-        Log.d("Jetpack", "LaunchedEffect typeOTP = $typeOTP")
-    }
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        repeat(4) {
-            index ->
-            val number = when {
-                index >= typeOTP.length -> ""
-                else -> typeOTP[index].toString()
-            }
-            Log.d("Jetpack", "OtpComposable: number = $number , index = $index")
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(50.dp)
-                        .background(Color.Blue)
-                ) {
-                    TextField(
-                        value = number,
-                        onValueChange = {
-                            Log.d("Jetpack", "onValueChange: $it otp = $typeOTP")
-                            typeOTP.plus(it)
-                        },
-                        modifier = Modifier.background(Color.White),
-                        textStyle = MaterialTheme.typography.titleLarge,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number
-                        )
-                    )
-
-//                    Text(
-//                        modifier = Modifier
-//                            .padding(5.dp)
-//                            .align(Alignment.Center),
-//                        text = number,
-//                        color = Color.White,
-//                        style = MaterialTheme.typography.titleLarge,
-//                    )
-                }
-
-            }
         }
     }
 }
