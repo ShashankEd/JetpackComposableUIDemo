@@ -39,7 +39,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.shashank.jetpackcomposeuidemo.R
+import com.shashank.jetpackcomposeuidemo.core.utils.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -48,7 +50,7 @@ import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 @Composable
-fun OtpLoginComposable(context: Context) {
+fun OtpLoginComposable(context: Context, navHostController: NavHostController) {
     var mobileNumber by remember {
         mutableStateOf("")
     }
@@ -119,23 +121,25 @@ fun OtpLoginComposable(context: Context) {
                 modifier = Modifier
                     .size(40.dp)
                     .clickable {
-                        sendClicked = true
+//                        sendClicked = true
+                         //Take user to otp submit
+                          navHostController.navigate(Screen.Setup.OtpSubmit.route)
                     },
                 painter = painterResource(id = R.drawable.send_otp),
                 contentDescription = "send otp"
             )
         }
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ){
-            OtpComposable(context, otp) {
-                //Otp filled, now take the user to the other screen
-            }
-        }
+//        Row (
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(vertical = 20.dp),
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.Center
+//        ){
+//            OtpComposable(context, otp) {
+//                //Otp filled, now take the user to the other screen
+//            }
+//        }
     }
 }
 

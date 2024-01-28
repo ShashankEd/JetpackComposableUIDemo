@@ -7,7 +7,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,8 +26,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.shashank.jetpackcomposeuidemo.R
 import com.shashank.jetpackcomposeuidemo.core.utils.Screen
 import com.shashank.jetpackcomposeuidemo.presentation.view.navigation.NavigationComposable
@@ -36,8 +35,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawerMenuComposable(context: Context, navHostController: NavHostController) {
-
+fun DrawerMenuComposable(context: Context, navHostController: NavHostController = rememberNavController()) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedDrawerItem by remember {
@@ -60,8 +58,8 @@ fun DrawerMenuComposable(context: Context, navHostController: NavHostController)
                                close()
                             }
                         }
-                        navHostController.navigate(Screen.Login.route) {
-                            popUpTo(Screen.Login.route)
+                        navHostController.navigate(Screen.DrawerScreen.Login.route) {
+                            popUpTo(Screen.DrawerScreen.Login.route)
                         }
                     }
 
@@ -78,8 +76,8 @@ fun DrawerMenuComposable(context: Context, navHostController: NavHostController)
                                 close()
                             }
                         }
-                        navHostController.navigate(Screen.Dashboard.route) {
-                            popUpTo(Screen.Dashboard.route)
+                        navHostController.navigate(Screen.DrawerScreen.Dashboard.route) {
+                            popUpTo(Screen.DrawerScreen.Dashboard.route)
                         }
                     }
 
@@ -96,8 +94,8 @@ fun DrawerMenuComposable(context: Context, navHostController: NavHostController)
                                 close()
                             }
                         }
-                        navHostController.navigate(Screen.Profile.route) {
-                            popUpTo(Screen.Profile.route)
+                        navHostController.navigate(Screen.DrawerScreen.Profile.route) {
+                            popUpTo(Screen.DrawerScreen.Profile.route)
                         }
                     }
 

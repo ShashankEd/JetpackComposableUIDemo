@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.rememberNavController
 import com.shashank.jetpackcomposeuidemo.MyApplication
 import com.shashank.jetpackcomposeuidemo.core.Boat
@@ -19,6 +21,7 @@ import com.shashank.jetpackcomposeuidemo.core.Engine
 import com.shashank.jetpackcomposeuidemo.di.AppModule
 import com.shashank.jetpackcomposeuidemo.presentation.view.composables.DrawerMenuComposable
 import com.shashank.jetpackcomposeuidemo.presentation.view.composables.OtpLoginComposable
+import com.shashank.jetpackcomposeuidemo.presentation.view.navigation.ParentNavComposable
 import com.shashank.jetpackcomposeuidemo.presentation.view.ui.theme.JetpackComposeUIDemoTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -56,10 +59,10 @@ class MainActivity : ComponentActivity(){
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        DrawerMenuComposable(context = this@MainActivity, navController)
-                    }
-//                    OtpLoginComposable(context = this)
+                    ParentNavComposable(
+                        context = this@MainActivity,
+                        navController = navController
+                    )
                 }
             }
         }
