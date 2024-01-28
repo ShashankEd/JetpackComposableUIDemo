@@ -4,50 +4,28 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.rememberNavController
-import com.shashank.jetpackcomposeuidemo.MyApplication
-import com.shashank.jetpackcomposeuidemo.core.Boat
-import com.shashank.jetpackcomposeuidemo.core.Engine
-import com.shashank.jetpackcomposeuidemo.di.AppModule
-import com.shashank.jetpackcomposeuidemo.presentation.view.composables.DrawerMenuComposable
-import com.shashank.jetpackcomposeuidemo.presentation.view.composables.OtpLoginComposable
+import com.google.android.recaptcha.Recaptcha
+import com.google.firebase.Firebase
+import com.google.firebase.appcheck.appCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.shashank.jetpackcomposeuidemo.presentation.view.navigation.ParentNavComposable
 import com.shashank.jetpackcomposeuidemo.presentation.view.ui.theme.JetpackComposeUIDemoTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(){
 
-    //it tells the Hilt to inject the below object to this activity
-    @Inject
-    lateinit var boat: Boat
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        boat.startBoat()
-        CoroutineScope(Dispatchers.IO).launch {
-            delay(2000)
-            withContext(Dispatchers.Main) {
-                boat.stopBoat()
-            }
-        }
-//        Log.d("Hilt", "onCreate: ${Boat(Engine()).startBoat()}")
+        appCheck()
         setContent {
             JetpackComposeUIDemoTheme {
                 // A surface container using the 'background' color from the theme
@@ -67,4 +45,28 @@ class MainActivity : ComponentActivity(){
             }
         }
     }
+
+    //Not sure whether to use this or not
+    private suspend fun setRecaptcha() {
+
+        Recaptcha.getClient(
+            application = application,
+            siteKey = "6Lcyz14pAAAAAMSigUVV9eNN-auGmj1QJHdu8dv9",
+            timeout = 20000L)
+            .onSuccess {
+                token ->
+                Log.d("Auth", "setRecaptcha: success $token")
+
+            }
+            .onFailure {
+                Log.d("Auth", "setRecaptcha: failure ${it.message}")
+            }
+    }
+
+    private fun appCheck() {
+        Firebase.appCheck.installAppCheckProviderFactory(
+            PlayIntegrityAppCheckProviderFactory.getInstance()
+        )
+    }
+
 }

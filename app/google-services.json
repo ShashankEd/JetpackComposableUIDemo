@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "402396759441",
+    "firebase_url": "https://myfirebaseapp-2931e.firebaseio.com",
+    "project_id": "myfirebaseapp-2931e",
+    "storage_bucket": "myfirebaseapp-2931e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402396759441:android:78751b6056d563caf54630",
+        "android_client_info": {
+          "package_name": "com.shashank.jetpackcomposeuidemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "402396759441-iee485234d45sm6tb4irk0mtrjdeq7vu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-duYB6LbZM9BZPZrTmUtb2Fx4uGblZ2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "402396759441-iee485234d45sm6tb4irk0mtrjdeq7vu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -28,6 +28,7 @@ import com.shashank.jetpackcomposeuidemo.core.common.JetpackProgressDialog
 import com.shashank.jetpackcomposeuidemo.core.common.JetpackText
 import com.shashank.jetpackcomposeuidemo.core.common.OtpView
 import com.shashank.jetpackcomposeuidemo.core.utils.Screen
+import com.shashank.jetpackcomposeuidemo.presentation.viewmodel.FirebaseAuthViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -35,7 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun OtpSubmitComposable(context: Context, navHostController: NavHostController) {
+fun OtpSubmitComposable(context: Context, navHostController: NavHostController, firebaseAuthViewModel: FirebaseAuthViewModel) {
 
     var otp by remember {
         mutableStateOf("")
@@ -63,6 +64,7 @@ fun OtpSubmitComposable(context: Context, navHostController: NavHostController) 
             isDialog = true
             //navigate to drawer
             if(otp.length == 6) {
+                firebaseAuthViewModel.signWithCredential(otp)
                 navHostController.navigate(Screen.DrawerScreen.route)
             } else {
                 Toast.makeText(context,"Enter a valid OTP!!", Toast.LENGTH_LONG).show()

@@ -1,5 +1,6 @@
 package com.shashank.jetpackcomposeuidemo.presentation.view.composables
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.shashank.jetpackcomposeuidemo.R
 import com.shashank.jetpackcomposeuidemo.core.utils.Screen
+import com.shashank.jetpackcomposeuidemo.presentation.viewmodel.FirebaseAuthViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -51,7 +53,7 @@ import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 @Composable
-fun OtpLoginComposable(context: Context, navHostController: NavHostController) {
+fun OtpLoginComposable(context: Context, navHostController: NavHostController, firebaseAuthViewModel:FirebaseAuthViewModel) {
     var mobileNumber by remember {
         mutableStateOf("")
     }
@@ -69,8 +71,14 @@ fun OtpLoginComposable(context: Context, navHostController: NavHostController) {
             sendClicked = false
             mobileNumber.let {
                 if(mobileNumber.length == 10) {
+
+//                    firebaseAuthViewModel.signWithEmailPass("test@gmail.com", "test1234")
+
+//                    firebaseAuthViewModel.forceReCaptcha()
+//                    //call the firebase's create user with phone
+                    firebaseAuthViewModel.createUserWithPhone("+91$mobileNumber", activity = context as Activity)
                     //take the user to otp consume screen
-                    navHostController.navigate(Screen.Setup.OtpSubmit.route)
+//                    navHostController.navigate(Screen.Setup.OtpSubmit.route)
                 } else {
                     Toast.makeText(context, "Enter correct number", Toast.LENGTH_LONG).show()
                 }
