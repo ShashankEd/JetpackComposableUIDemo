@@ -14,6 +14,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +30,7 @@ import com.shashank.jetpackcomposeuidemo.core.common.JetpackText
 import com.shashank.jetpackcomposeuidemo.core.common.OtpView
 import com.shashank.jetpackcomposeuidemo.core.utils.Screen
 import com.shashank.jetpackcomposeuidemo.presentation.viewmodel.FirebaseAuthViewModel
+import com.shashank.jetpackcomposeuidemo.presentation.viewmodel.MobileOtpAuthViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -36,7 +38,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun OtpSubmitComposable(context: Context, navHostController: NavHostController, firebaseAuthViewModel: FirebaseAuthViewModel) {
+fun OtpSubmitComposable(context: Context, navHostController: NavHostController, firebaseAuthViewModel: FirebaseAuthViewModel,
+                        mobileAuthViewModel: MobileOtpAuthViewModel
+) {
+    val verifyOTPState = mobileAuthViewModel.verifyOtpAuth.collectAsState().value
+
 
     var otp by remember {
         mutableStateOf("")
@@ -47,6 +53,10 @@ fun OtpSubmitComposable(context: Context, navHostController: NavHostController, 
     }
 
     var isDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var isLoading by remember {
         mutableStateOf(false)
     }
 
@@ -64,13 +74,35 @@ fun OtpSubmitComposable(context: Context, navHostController: NavHostController, 
             isDialog = true
             //navigate to drawer
             if(otp.length == 6) {
-                firebaseAuthViewModel.signWithCredential(otp)
-                navHostController.navigate(Screen.DrawerScreen.route)
+//                firebaseAuthViewModel.signWithCredential(otp)
+                Log.d("Fast2sms", "mobile in SP: ${mobileAuthViewModel.getMobileNoFromSp()}")
+                if(!mobileAuthViewModel.getMobileNoFromSp().toString().equals("0")) {
+                    mobileAuthViewModel.verifyOtp(mobileAuthViewModel.getMobileNoFromSp(), otp.toLong())
+                } else {
+                    Toast.makeText(context,"Mobile no not found in the SP", Toast.LENGTH_LONG).show()
+                }
+
             } else {
                 Toast.makeText(context,"Enter a valid OTP!!", Toast.LENGTH_LONG).show()
 
             }
         }
+    }
+
+    LaunchedEffect(verifyOTPState) {
+        if(verifyOTPState.isLoading){
+            isLoading = true
+        } else {
+            isLoading = false
+            if(verifyOTPState.mobileAuthOtp?.success == true) {
+                //take the user to otp consume screen
+                navHostController.navigate(Screen.DrawerScreen.route)
+            }
+        }
+    }
+
+    if(isLoading) {
+        JetpackProgressDialog()
     }
 
     Column(

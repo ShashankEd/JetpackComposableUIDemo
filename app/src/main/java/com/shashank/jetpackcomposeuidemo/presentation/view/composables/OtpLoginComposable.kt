@@ -29,6 +29,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,17 +44,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.shashank.jetpackcomposeuidemo.R
+import com.shashank.jetpackcomposeuidemo.core.common.JetpackProgressDialog
 import com.shashank.jetpackcomposeuidemo.core.utils.Screen
 import com.shashank.jetpackcomposeuidemo.presentation.viewmodel.FirebaseAuthViewModel
+import com.shashank.jetpackcomposeuidemo.presentation.viewmodel.MobileOtpAuthViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 @Composable
-fun OtpLoginComposable(context: Context, navHostController: NavHostController, firebaseAuthViewModel:FirebaseAuthViewModel) {
+fun OtpLoginComposable(context: Context, navHostController: NavHostController, firebaseAuthViewModel:FirebaseAuthViewModel,
+                       mobileAuthViewModel:MobileOtpAuthViewModel) {
+
+    val sendOTPState = mobileAuthViewModel.mobileOtpAuth.collectAsState().value
+
     var mobileNumber by remember {
         mutableStateOf("")
     }
@@ -66,6 +74,11 @@ fun OtpLoginComposable(context: Context, navHostController: NavHostController, f
         mutableStateOf(false)
     }
 
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
+
+
     LaunchedEffect(sendClicked) {
         if(sendClicked) {
             sendClicked = false
@@ -76,9 +89,8 @@ fun OtpLoginComposable(context: Context, navHostController: NavHostController, f
 
 //                    firebaseAuthViewModel.forceReCaptcha()
 //                    //call the firebase's create user with phone
-                    firebaseAuthViewModel.createUserWithPhone("+91$mobileNumber", activity = context as Activity)
-                    //take the user to otp consume screen
-//                    navHostController.navigate(Screen.Setup.OtpSubmit.route)
+//                    firebaseAuthViewModel.createUserWithPhone("+91$mobileNumber", activity = context as Activity)
+                    mobileAuthViewModel.sendOtp(mobileNumber.toLong())
                 } else {
                     Toast.makeText(context, "Enter correct number", Toast.LENGTH_LONG).show()
                 }
@@ -86,10 +98,26 @@ fun OtpLoginComposable(context: Context, navHostController: NavHostController, f
         }
     }
 
+    LaunchedEffect(sendOTPState) {
+        if(sendOTPState.isLoading){
+          isLoading = true
+        } else {
+            isLoading = false
+            if(sendOTPState.mobileAuthOtp?.success == true) {
+                //store the mobile number into the SP
+                mobileAuthViewModel.storeMobileNoInSp(mobileNumber = mobileNumber.toLong())
+                //take the user to otp consume screen
+                navHostController.navigate(Screen.Setup.OtpSubmit.route)
+            }
+        }
+    }
+    if(isLoading) {
+        JetpackProgressDialog()
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            . padding(vertical = 40.dp, horizontal = 20.dp),
+            .padding(vertical = 40.dp, horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -102,7 +130,9 @@ fun OtpLoginComposable(context: Context, navHostController: NavHostController, f
         )
         Spacer(modifier = Modifier.padding(vertical = 20.dp))
         Row (
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ){
@@ -123,7 +153,7 @@ fun OtpLoginComposable(context: Context, navHostController: NavHostController, f
                     .clickable {
 //                        sendClicked = true
                         //Take user to otp submit
-                               sendClicked = true
+                        sendClicked = true
                     },
                 painter = painterResource(id = R.drawable.send_otp),
                 contentDescription = "send otp"

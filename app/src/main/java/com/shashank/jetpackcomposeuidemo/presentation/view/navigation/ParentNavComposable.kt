@@ -13,12 +13,15 @@ import com.shashank.jetpackcomposeuidemo.presentation.view.composables.OtpLoginC
 import com.shashank.jetpackcomposeuidemo.presentation.view.composables.OtpSubmitComposable
 import com.shashank.jetpackcomposeuidemo.presentation.view.composables.SplashComposable
 import com.shashank.jetpackcomposeuidemo.presentation.viewmodel.FirebaseAuthViewModel
+import com.shashank.jetpackcomposeuidemo.presentation.viewmodel.MobileOtpAuthViewModel
 import javax.inject.Inject
 
 @Composable
 fun ParentNavComposable(context: Context, navController: NavHostController) {
 
     val firebaseAuthViewModel = hiltViewModel<FirebaseAuthViewModel>()
+
+    val mobileAuthViewModel = hiltViewModel<MobileOtpAuthViewModel>()
 
     NavHost(navController =navController , startDestination = Screen.Splash.route ) {
 
@@ -39,7 +42,8 @@ fun ParentNavComposable(context: Context, navController: NavHostController) {
                 OtpLoginComposable(
                     context = context,
                     navHostController = navController,
-                    firebaseAuthViewModel
+                    firebaseAuthViewModel,
+                    mobileAuthViewModel
                 )
             }
 
@@ -47,7 +51,8 @@ fun ParentNavComposable(context: Context, navController: NavHostController) {
                 OtpSubmitComposable(
                     context = context,
                     navHostController = navController,
-                    firebaseAuthViewModel
+                    firebaseAuthViewModel,
+                    mobileAuthViewModel
                 )
             }
         }

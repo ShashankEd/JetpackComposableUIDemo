@@ -82,6 +82,7 @@ fun OtpView(
             }
         })
 }
+
 @Composable
 private fun CharView(
     index: Int,
