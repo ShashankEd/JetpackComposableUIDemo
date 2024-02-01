@@ -8,8 +8,11 @@ import com.shashank.jetpackcomposeuidemo.core.utils.Constants
 import com.shashank.jetpackcomposeuidemo.core.utils.Resource
 import com.shashank.jetpackcomposeuidemo.core.utils.SendOTPModel
 import com.shashank.jetpackcomposeuidemo.core.utils.VerifyOtpModel
+import com.shashank.jetpackcomposeuidemo.core.utils.VerifyTokenModel
+import com.shashank.jetpackcomposeuidemo.domain.model.VerifyToken
 import com.shashank.jetpackcomposeuidemo.domain.usecase.MobileOtpAuthUseCase
 import com.shashank.jetpackcomposeuidemo.presentation.state.MobileOtpAuthViewModelState
+import com.shashank.jetpackcomposeuidemo.presentation.state.OtpViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +32,10 @@ class MobileOtpAuthViewModel @Inject constructor(
     val verifyOtpAuth: StateFlow<MobileOtpAuthViewModelState>
         get() = _verifyOtpAuth
 
+    private val _verifyToken = MutableStateFlow(OtpViewModelState())
+    val verifyToken: StateFlow<OtpViewModelState>
+        get() = _verifyToken
+
     fun sendOtp(mobileNumber: Long) {
         val model = SendOTPModel(mobileNumber = mobileNumber)
         Log.d("Fast2sms", "sendOtp: called in viewmodel $mobileNumber")
@@ -41,11 +48,11 @@ class MobileOtpAuthViewModel @Inject constructor(
                     _mobileOtpAuth.value = MobileOtpAuthViewModelState().copy(isLoading = true)
                 }
                 is Resource.Success -> {
-                    _mobileOtpAuth.value = MobileOtpAuthViewModelState().copy(mobileAuthOtp = it.mobileAuthOtp)
+                    _mobileOtpAuth.value = MobileOtpAuthViewModelState().copy(mobileAuthOtp = it.model)
                 }
 
                 else -> {
-                    _mobileOtpAuth.value = MobileOtpAuthViewModelState().copy(mobileAuthOtp = it.mobileAuthOtp)
+                    _mobileOtpAuth.value = MobileOtpAuthViewModelState().copy(mobileAuthOtp = it.model)
                 }
             }
         }.launchIn(viewModelScope)
@@ -63,15 +70,37 @@ class MobileOtpAuthViewModel @Inject constructor(
                     _verifyOtpAuth.value = MobileOtpAuthViewModelState().copy(isLoading = true)
                 }
                 is Resource.Success -> {
-                    _verifyOtpAuth.value = MobileOtpAuthViewModelState().copy(mobileAuthOtp = it.mobileAuthOtp)
+                    _verifyOtpAuth.value = MobileOtpAuthViewModelState().copy(mobileAuthOtp = it.model)
                 }
 
                 else -> {
-                    _verifyOtpAuth.value = MobileOtpAuthViewModelState().copy(mobileAuthOtp = it.mobileAuthOtp)
+                    _verifyOtpAuth.value = MobileOtpAuthViewModelState().copy(mobileAuthOtp = it.model)
                 }
             }
         }.launchIn(viewModelScope)
     }
+
+    fun verifyToken(mobileNumber: Long, token: String) {
+        val model = VerifyTokenModel(mobileNumber = mobileNumber, token = token)
+
+        mobileOtpAuthUseCase.verifyTokenCase(model).onEach {
+            when(it) {
+                is Resource.Error -> {
+                    _verifyToken.value = OtpViewModelState().copy(errorMessage = it.status)
+                }
+                is Resource.Loading -> {
+                    _verifyToken.value = OtpViewModelState().copy(isLoading = true)
+                }
+                is Resource.Success -> {
+                    _verifyToken.value = OtpViewModelState().copy(verifyToken = it.model)
+                }
+                else -> {
+                    _verifyToken.value = OtpViewModelState().copy(verifyToken = it.model)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
 
     //shared preference get and set
     fun storeMobileNoInSp(mobileNumber: Long) {
@@ -80,5 +109,17 @@ class MobileOtpAuthViewModel @Inject constructor(
 
     fun getMobileNoFromSp(): Long {
         return mobileOtpAuthUseCase.getMobileNoFromSp()
+    }
+
+    fun storeAuthTokenInSp(authToken: String) {
+        mobileOtpAuthUseCase.storeAuthTokenInSp(authToken = authToken)
+    }
+
+    fun getAuthTokenFromSp(): String? {
+        return mobileOtpAuthUseCase.getAuthTokenFromSp()
+    }
+
+    fun clearSP() {
+        mobileOtpAuthUseCase.clearSP()
     }
 }

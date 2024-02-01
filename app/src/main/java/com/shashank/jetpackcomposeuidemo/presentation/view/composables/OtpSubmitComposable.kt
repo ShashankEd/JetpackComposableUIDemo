@@ -38,10 +38,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun OtpSubmitComposable(context: Context, navHostController: NavHostController, firebaseAuthViewModel: FirebaseAuthViewModel,
-                        mobileAuthViewModel: MobileOtpAuthViewModel
-) {
+fun OtpSubmitComposable(context: Context, navHostController: NavHostController,
+                        firebaseAuthViewModel: FirebaseAuthViewModel,
+                        mobileAuthViewModel: MobileOtpAuthViewModel) {
     val verifyOTPState = mobileAuthViewModel.verifyOtpAuth.collectAsState().value
+
+    val verifyTokenState = mobileAuthViewModel.verifyToken.collectAsState().value
 
 
     var otp by remember {
@@ -60,8 +62,8 @@ fun OtpSubmitComposable(context: Context, navHostController: NavHostController, 
         mutableStateOf(false)
     }
 
-    if(isDialog)
-        JetpackProgressDialog()
+//    if(isDialog)
+//        JetpackProgressDialog()
 
     LaunchedEffect(otp) {
         Log.d("Jetpack", "LaunchedEffect OTP changed: $otp")
@@ -71,7 +73,7 @@ fun OtpSubmitComposable(context: Context, navHostController: NavHostController, 
         Log.d("Jetpack", "LaunchedEffect otpSent: $otpSent")
         if(otpSent) {
             otpSent = false
-            isDialog = true
+            isLoading = true
             //navigate to drawer
             if(otp.length == 6) {
 //                firebaseAuthViewModel.signWithCredential(otp)
@@ -95,8 +97,29 @@ fun OtpSubmitComposable(context: Context, navHostController: NavHostController, 
         } else {
             isLoading = false
             if(verifyOTPState.mobileAuthOtp?.success == true) {
-                //take the user to otp consume screen
+                // now we'll need to verify the token- call the API
+                verifyOTPState.mobileAuthOtp.token?.let {
+                    mobileAuthViewModel.storeAuthTokenInSp(authToken = it)
+                }
+                verifyOTPState.mobileAuthOtp.token?.let {
+                    mobileAuthViewModel.verifyToken(mobileAuthViewModel.getMobileNoFromSp(),
+                        it
+                    )
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(verifyTokenState) {
+        if(verifyTokenState.isLoading){
+            isLoading = true
+        } else {
+            isLoading = false
+            if(verifyTokenState.verifyToken?.success == true) {
+                //take the user to the dashboard
                 navHostController.navigate(Screen.DrawerScreen.route)
+            } else if(verifyTokenState.verifyToken?.success == false) {
+                navHostController.navigate(Screen.Setup.route)
             }
         }
     }
