@@ -1,7 +1,13 @@
 package com.shashank.jetpackcomposeuidemo.presentation.view.navigation
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,7 +35,8 @@ fun ParentNavComposable(context: Context, navController: NavHostController) {
         composable(route =  Screen.Splash.route) {
             SplashComposable(
                 context = context,
-                navHostController = navController
+                navHostController = navController,
+                mobileAuthViewModel
             )
         }
 
@@ -60,7 +67,8 @@ fun ParentNavComposable(context: Context, navController: NavHostController) {
         //nav graph for drawer layout
         composable(route = Screen.DrawerScreen.route) {
             DrawerMenuComposable(
-                context = context
+                context = context,
+                mobileAuthViewModel
             )
         }
     }

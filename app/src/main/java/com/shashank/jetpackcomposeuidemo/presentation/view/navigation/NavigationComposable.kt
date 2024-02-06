@@ -10,24 +10,28 @@ import androidx.navigation.navigation
 import com.shashank.jetpackcomposeuidemo.core.utils.Screen
 import com.shashank.jetpackcomposeuidemo.presentation.view.composables.DashboardComposable
 import com.shashank.jetpackcomposeuidemo.presentation.view.composables.LoginComposable
+import com.shashank.jetpackcomposeuidemo.presentation.view.composables.LogoutComposable
 import com.shashank.jetpackcomposeuidemo.presentation.view.composables.ProfileComposable
+import com.shashank.jetpackcomposeuidemo.presentation.viewmodel.MobileOtpAuthViewModel
 
 @Composable
-fun NavigationComposable(context: Context, navController: NavHostController, onDrawerItemSelected: () -> Unit) {
+fun NavigationComposable(context: Context, mobileAuthViewModel:MobileOtpAuthViewModel,navController: NavHostController, onDrawerItemSelected: () -> Unit) {
     NavHost(navController =navController , startDestination = Screen.DrawerScreen.route) {
 
         //Nav graph for drawer components
         navigation(
             route = Screen.DrawerScreen.route,
-            startDestination = Screen.DrawerScreen.Login.route) {
+            startDestination = Screen.DrawerScreen.Dashboard.route) {
 
-            composable(route = Screen.DrawerScreen.Login.route) {
-                LoginComposable(
+            composable(route = Screen.DrawerScreen.Logout.route) {
+                LogoutComposable(
                     context = context,
+                    navController,
+                    mobileAuthViewModel = mobileAuthViewModel,
                     onFormSubmit = {
-                        Log.d("Jetpack", "Form Successful: ${it}")
-                    },
-                    navController = navController
+                        Log.d("Jetpack", "Logout successful: ${it}")
+                    }
+
                 )
                 onDrawerItemSelected()
             }

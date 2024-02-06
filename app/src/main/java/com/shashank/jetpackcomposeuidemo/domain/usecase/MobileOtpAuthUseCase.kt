@@ -36,6 +36,15 @@ class MobileOtpAuthUseCase @Inject constructor(
         return sharedPreferences.getString(Constants.PREF_NAME_AUTH_TOKEN,"")
     }
 
+    fun storeLoginStatus(isLoggedIn: Boolean) {
+        sharedPreferences.edit().putBoolean(Constants.PREF_NAME_IS_LOGGED_IN, isLoggedIn).apply()
+    }
+
+    fun getLoginStatus(): Boolean {
+        return sharedPreferences.getBoolean(Constants.PREF_NAME_IS_LOGGED_IN,false)
+    }
+
+
     fun clearSP() {
         sharedPreferences.edit().clear().apply()
     }

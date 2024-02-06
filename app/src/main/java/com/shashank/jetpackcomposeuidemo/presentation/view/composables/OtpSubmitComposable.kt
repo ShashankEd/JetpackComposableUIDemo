@@ -116,9 +116,13 @@ fun OtpSubmitComposable(context: Context, navHostController: NavHostController,
         } else {
             isLoading = false
             if(verifyTokenState.verifyToken?.success == true) {
+                //store logged in state
+                mobileAuthViewModel.storeLoginStatus(true)
+                Log.d("Fast2sms", "storeLoginStatus: ${mobileAuthViewModel.getLoginStatus()}")
                 //take the user to the dashboard
                 navHostController.navigate(Screen.DrawerScreen.route)
             } else if(verifyTokenState.verifyToken?.success == false) {
+
                 navHostController.navigate(Screen.Setup.route)
             }
         }

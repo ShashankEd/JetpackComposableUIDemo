@@ -29,13 +29,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.shashank.jetpackcomposeuidemo.R
+import com.shashank.jetpackcomposeuidemo.core.common.JetpackText
 import com.shashank.jetpackcomposeuidemo.core.utils.Screen
 import com.shashank.jetpackcomposeuidemo.presentation.view.navigation.NavigationComposable
+import com.shashank.jetpackcomposeuidemo.presentation.viewmodel.MobileOtpAuthViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawerMenuComposable(context: Context, navHostController: NavHostController = rememberNavController()) {
+fun DrawerMenuComposable(context: Context,  mobileAuthViewModel:MobileOtpAuthViewModel,navHostController: NavHostController = rememberNavController()) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedDrawerItem by remember {
@@ -45,32 +47,13 @@ fun DrawerMenuComposable(context: Context, navHostController: NavHostController 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet(
-            ) {
+            ModalDrawerSheet {
                 NavigationDrawerItem(
-                    label = {Text("Login")},
+                    label = {Text("Dashboard")},
                     selected = selectedDrawerItem == 1,
                     onClick = {
                         selectedDrawerItem = 1
-                        Toast.makeText(context, "Login clicked", Toast.LENGTH_LONG).show()
-                        scope.launch {
-                            drawerState.apply {
-                               close()
-                            }
-                        }
-                        navHostController.navigate(Screen.DrawerScreen.Login.route) {
-                            popUpTo(Screen.DrawerScreen.Login.route)
-                        }
-                    }
-
-                )
-                Divider()
-                NavigationDrawerItem(
-                    label = {Text("Dashboard")},
-                    selected = selectedDrawerItem == 2,
-                    onClick = {
-                        selectedDrawerItem = 2
-                        Toast.makeText(context, "Dashboard clicked", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Dashboard Selected", Toast.LENGTH_LONG).show()
                         scope.launch {
                             drawerState.apply {
                                 close()
@@ -85,10 +68,10 @@ fun DrawerMenuComposable(context: Context, navHostController: NavHostController 
                 Divider()
                 NavigationDrawerItem(
                     label = {Text("Profile")},
-                    selected = selectedDrawerItem == 3,
+                    selected = selectedDrawerItem == 2,
                     onClick = {
-                        selectedDrawerItem = 3
-                        Toast.makeText(context, "Profile clicked", Toast.LENGTH_LONG).show()
+                        selectedDrawerItem = 2
+                        Toast.makeText(context, "Profile Selected", Toast.LENGTH_LONG).show()
                         scope.launch {
                             drawerState.apply {
                                 close()
@@ -96,6 +79,24 @@ fun DrawerMenuComposable(context: Context, navHostController: NavHostController 
                         }
                         navHostController.navigate(Screen.DrawerScreen.Profile.route) {
                             popUpTo(Screen.DrawerScreen.Profile.route)
+                        }
+                    }
+
+                )
+                Divider()
+                NavigationDrawerItem(
+                    label = { JetpackText(text = "Logout")},
+                    selected = selectedDrawerItem == 3,
+                    onClick = {
+                        selectedDrawerItem = 3
+                        Toast.makeText(context, "Logout Selected", Toast.LENGTH_LONG).show()
+                        scope.launch {
+                            drawerState.apply {
+                                close()
+                            }
+                        }
+                        navHostController.navigate(Screen.DrawerScreen.Logout.route) {
+                            popUpTo(Screen.DrawerScreen.Logout.route)
                         }
                     }
 
@@ -170,7 +171,7 @@ fun DrawerMenuComposable(context: Context, navHostController: NavHostController 
 //                    Log.d("Jetpack", "Form Successful: ${it}")
 //                }
 //            )
-            NavigationComposable(context = context, navController = navHostController, onDrawerItemSelected ={
+            NavigationComposable(context = context, mobileAuthViewModel,navController = navHostController, onDrawerItemSelected ={
                 drawerState.apply {
                     Log.d("Jetpack", "DrawerMenuComposable current drawer item = ${this.currentValue} ")
                 }

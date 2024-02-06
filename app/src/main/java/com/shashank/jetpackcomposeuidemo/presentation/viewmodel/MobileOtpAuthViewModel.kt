@@ -122,4 +122,12 @@ class MobileOtpAuthViewModel @Inject constructor(
     fun clearSP() {
         mobileOtpAuthUseCase.clearSP()
     }
+
+    fun storeLoginStatus(isLoggedIn: Boolean) {
+        mobileOtpAuthUseCase.storeLoginStatus(isLoggedIn)
+    }
+
+    fun getLoginStatus(): Boolean {
+        return mobileOtpAuthUseCase.getLoginStatus()
+    }
 }
